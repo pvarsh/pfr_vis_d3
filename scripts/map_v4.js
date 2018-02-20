@@ -20,19 +20,6 @@ var svg = d3.select("body")
 	.attr('width', width)
 	.attr('height', height);
 
-var tooltip = d3.select("body")
-	.append("div")
-	.attr("id", "country_box")
-	.style("float", "right")
-	.style("z-index", "100")
-	.style("visibility", "hidden")
-	.style("background", "white")
-	.style("padding", "30px")
-	.style("width", "100px")
-	.style("height", "30px")
-	.style("margin", "20px")
-	.style("border", "1px black solid");
-
 svg.append("defs").append("path")
     .datum({type: "Sphere"})
     .attr("id", "sphere")
@@ -94,37 +81,15 @@ function mainMap(error, iso_3166_country_codes, world, earnings){
 		.style("stroke-width", '0.2')
 		.on("click", update);
 
-/*
-		.on("mouseover", function(d){
-			tooltip.text(iso_3166_country_codes[zeroPad(d.id, 3)]);
-			return tooltip.style("visibility", "visible");})
-*/
   svg.insert("path", ".graticule")
       .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
       .attr("class", "boundary")
       .attr("d", path);
 
-/*
-  var points = [
-  	[-122.4194, 37.7749],
-  	[18.4241, -33.9249]
-  ];
-  var points_g = svg.append('g');
-  
-  circles = points_g.selectAll("circle")
-  	.data(points)
-  	.enter()
-  	.append('circle')
-  	.attr('cx', function(d, i) {return projection(d)[0]; })
-  	.attr('cy', function(d, i) {return projection(d)[1];})
-  	.attr('r', 3)
-  	.attr('fill', 'red');
-*/
 }
 
 d3.queue()
 	.defer(d3.json, '../data/track_earnings_2012_top_5.json')
-	//.defer(d3.json, '../data/iso_3166_country_codes.json')
 	.await(earningsBox);
 
 function update(countryFeature){
@@ -166,8 +131,6 @@ function update(countryFeature){
 		.attr('height', yScale.bandwidth);
 
 	var yAxis = d3.select("#song_box_svg .axis--y");
-	console.log(yAxis);
-	console.log(yScale);
 	yAxis.call(d3.axisLeft(yScale).ticks(10, "%"));
 }
 
@@ -228,14 +191,6 @@ function earningsBox(error, earnings){
 		.attr('width', function(d, i){return xScale(d.earnings)})
 		.attr('y', function(d, i){return yScale(d.name)})
 		.attr('height', yScale.bandwidth);
-
-	top_songs_list = songs_box.append("ol");
-	top_songs_list.selectAll("li")
-		.data(earnings)
-		.enter()
-		.append("li")
-		.text(function(d, i) {return d.name + ' ' + d.album + ' ' + d.earnings});
-	/*songs_box.text(earnings.Australia);*/
 }
 
 d3.select(self.frameElement).style("height", height + "px");

@@ -128,9 +128,14 @@ d3.queue()
 	.await(earningsBox);
 
 function update(countryFeature){
-	var songBoxSvg = d3.select("#song_box_svg .bars");
 	var countryName = countriesISO[zeroPad(countryFeature.id, 3)];
 	var earnings = trackEarnings[countryName];
+	var songsBox = d3.select("#songs_box");
+	songsBox.selectAll("h2")
+		.data([countryName])
+		.text(countryName);
+	
+	var songBoxSvg = d3.select("#song_box_svg .bars");
 	var max_earnings = earnings[0].earnings
 	var min_earnings = earnings[earnings.length-1].earnings
 	
@@ -172,6 +177,12 @@ function earningsBox(error, earnings){
 	songs_box = d3.select("body")
 		.append("div")
 		.attr("id", "songs_box");
+
+	songs_box.selectAll("h2")
+		.data(['foobar'])
+		.enter()
+		.append("h2")
+		.text("foobarbaz");
 
 	max_earnings = earnings[0].earnings
 	min_earnings = earnings[earnings.length-1].earnings

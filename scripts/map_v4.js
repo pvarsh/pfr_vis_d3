@@ -96,6 +96,7 @@ function update(countryFeature){
 	var countryName = countriesISO[zeroPad(countryFeature.id, 3)];
 	var earnings = trackEarnings[countryName];
 	var songsBox = d3.select("#songs_box");
+	songsBox.style("visibility", "visible");
 	songsBox.selectAll("h2")
 		.data([countryName])
 		.text(countryName);
@@ -139,7 +140,8 @@ function earningsBox(error, earnings){
 	var earnings = earnings.Australia
 	songs_box = d3.select("body")
 		.append("div")
-		.attr("id", "songs_box");
+		.attr("id", "songs_box")
+		.style("visibility", "hidden");
 
 	songs_box.selectAll("h2")
 		.data(['foobar'])

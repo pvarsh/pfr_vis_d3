@@ -73,8 +73,8 @@ function mainMap(error, iso_3166_country_codes, world, earnings){
 		.attr("class", "country")
 		.attr("d", path)
 		.style("fill", function(d, i) {
-				country_name = iso_3166_country_codes[d.id];
-				color = earnings[country_name] ? colorScale(earnings[country_name]) : 'white';
+        var countryName = iso_3166_country_codes[zeroPad(d.id, 3)];
+				color = earnings[countryName] ? colorScale(earnings[countryName]) : 'white';
 				return color
 			})
 		.style("stroke", 'black')

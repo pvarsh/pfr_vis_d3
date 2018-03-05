@@ -95,6 +95,13 @@ d3.queue()
 function update(countryFeature){
 	var countryName = countriesISO[zeroPad(countryFeature.id, 3)];
 	var earnings = trackEarnings[countryName];
+  var emptyEarnings = [{
+      earnings: 0,
+      artist: '',
+      album: '',
+      name: ''}]
+  var earnings = (typeof earnings === 'undefined') ? emptyEarnings : earnings;
+
 	var songsBox = d3.select("#songs_box");
 	songsBox.style("visibility", "visible");
 	songsBox.selectAll("h2")
@@ -118,7 +125,7 @@ function update(countryFeature){
 		.padding(0.1);
 	
 	var rect = songBoxSvg.selectAll("rect")
-		.data(trackEarnings[countryName]);
+		.data(earnings);
 
 	rect.exit().remove();
 	var rectEnter = rect.enter().append("rect");

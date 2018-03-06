@@ -1,13 +1,22 @@
+
 var countriesISO;
 var trackEarnings;
-var width = 960;
-var height = 580;
+var boundingRectangle = d3.select("body")
+  .node()
+  .getBoundingClientRect();
+
+const pageWidth = boundingRectangle.width,
+      pageHeight = boundingRectangle.height;
 
 var color = d3.scaleOrdinal(d3.schemeCategory10);
 
+const mapAspectRatio = 960/580;
+var mapBoxWidth = 700;
+    mapBoxHeight = mapBoxWidth / mapAspectRatio;
+
 var projection = d3.geoKavrayskiy7()
-	.scale(170)
-  .translate([width / 2, height / 2])
+	.scale(128.105)
+  .translate([mapBoxWidth / 2, mapBoxHeight / 2])
 	.precision(.1);
 
 var path = d3.geoPath()
@@ -15,33 +24,42 @@ var path = d3.geoPath()
 
 var graticule = d3.geoGraticule();
 
-var svg = d3.select("body")
-	.append("svg")
-	.attr('width', width)
-	.attr('height', height);
+var mainFlexbox = d3.select("body")
+  .append("div")
+  .attr("id", "main");
 
-svg.append("defs").append("path")
+var mapSVG = d3.select("#main")
+	.append("svg")
+  .attr('id', 'main-map')
+	.attr('width', mapBoxWidth)
+	.attr('height', mapBoxHeight);
+
+var statsSidebar = mainFlexbox.append("div")
+  .attr("class", "sidebar")
+  .attr("id", "stats");
+
+mapSVG.append("defs").append("path")
     .datum({type: "Sphere"})
     .attr("id", "sphere")
     .attr("d", path)
 		.attr("fill", "#b8c1da");
 
-svg.append("use")
+mapSVG.append("use")
     .attr("class", "stroke")
     .attr("xlink:href", "#sphere");
 
-svg.append("use")
+mapSVG.append("use")
     .attr("class", "fill")
     .attr("xlink:href", "#sphere");
 
-svg.append("path")
+mapSVG.append("path")
 	.datum(graticule)
 	.attr("class", "graticule")
 	.attr("d", path);
 
 var url = "../data/world-50m.json"
 
-svg.append("path")
+mapSVG.append("path")
 	.datum(graticule)
 	.attr("class", "graticule")
 	.attr("d", path);
@@ -66,7 +84,7 @@ function mainMap(error, iso_3166_country_codes, world, earnings){
 	var colorScale = d3.scaleSequential(d3.interpolateOrRd)
 		.domain([min_earnings - 2, max_earnings * 1.4]);
 	
-	svg.selectAll(".country")
+	mapSVG.selectAll(".country")
 		.data(countries)
 		.enter()
 		.insert("path", ".graticule")
@@ -81,7 +99,7 @@ function mainMap(error, iso_3166_country_codes, world, earnings){
 		.style("stroke-width", '0.2')
 		.on("click", update);
 
-  svg.insert("path", ".graticule")
+  mapSVG.insert("path", ".graticule")
       .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
       .attr("class", "boundary")
       .attr("d", path);
@@ -145,8 +163,8 @@ function update(countryFeature){
 function earningsBox(error, earnings){
   trackEarnings = earnings;
 	var earnings = earnings.Australia
-	songs_box = d3.select("body")
-		.append("div")
+	songs_box = statsSidebar.append("div")
+		.attr("class", "songs_box")
 		.attr("id", "songs_box")
 		.style("visibility", "hidden");
 
@@ -202,4 +220,4 @@ function earningsBox(error, earnings){
 		.attr('height', yScale.bandwidth);
 }
 
-d3.select(self.frameElement).style("height", height + "px");
+d3.select(self.frameElement).style("height", pageHeight + "px");

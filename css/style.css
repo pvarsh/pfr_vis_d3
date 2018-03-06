@@ -1,0 +1,39 @@
+#main {
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+}
+
+#song_box_svg {
+  overflow: visible;
+}
+
+svg .stroke {
+	fill: none;
+	stroke: #000;
+	stroke-width: 3px;
+}
+
+svg .fill {
+	fill: #fff;
+}
+
+svg .graticule {
+	fill: none;
+	stroke: #777;
+	stroke-width: .5px;
+	stroke-opacity: .5;
+}
+
+svg .land {
+	fill: #222;
+}
+
+svg .boundary {
+	fill: none;
+}
